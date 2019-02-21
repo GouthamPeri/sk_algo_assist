@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: sk-algo-assist
+Version: 0.1
+Summary: An assistant for algorithm selection to help Data Scientists using SKLearn.
+Home-page: https://github.com/GouthamPeri/sk_algo_assist
+Author: Goutham Peri
+Author-email: sivagoutham369@gmail.com
+License: MIT
+Description: UNKNOWN
+Platform: UNKNOWN
