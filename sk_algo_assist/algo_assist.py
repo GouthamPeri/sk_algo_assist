@@ -1,9 +1,9 @@
 from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier, RandomForestRegressor, ExtraTreesRegressor
 from sklearn.linear_model import LogisticRegression, LinearRegression
+from sklearn.model_selection import train_test_split
 from sklearn.metrics import f1_score, precision_score, recall_score, accuracy_score
 from sklearn.metrics import mean_absolute_error, mean_squared_error, explained_variance_score
 import time
-import sklearn
 import pandas as pd
 
 
@@ -34,7 +34,15 @@ class MetricNotDefined(Exception):
     pass
 
 
-def compare_algos(x_train, x_test, y_train, y_test, reg_or_class = '', metric = None, pp_accuracies = False):
+def entry(df, y, split = 0.7, reg_or_class = '', metric = None, pp_accuracies = False):
+
+    df_y = df[y]
+    x = df.drop([y], axis=1)
+    x_train, x_test, y_train, y_test = train_test_split(x, df_y, test_size=1 - split, random_state=42)
+    compare_algos(x_train, x_test, y_train, y_test, reg_or_class, metric, pp_accuracies=True)
+
+
+def compare_algos(x_train, x_test, y_train, y_test, reg_or_class, metric, pp_accuracies):
     '''
 
     A function compare the algorithms that are suitable for the dataset and get the best algorithm
@@ -68,13 +76,13 @@ def compare_algos(x_train, x_test, y_train, y_test, reg_or_class = '', metric = 
     do_error_checking(x_train, x_test, y_train, y_test, pp_accuracies, reg_or_class, metric)
 
     algos_to_be_compared, algo_type = get_algos_to_be_compared(y_train, reg_or_class)
-
     accuracies = []
     index = 0
     total_time = 0
-
+    times_taken = []
     for algo in algos_to_be_compared:
         start_time = time.time()
+        print(algo, type(algo))
         model = algo()
         model.fit(x_train, y_train)
         y_pred = model.predict(x_test)
@@ -84,12 +92,8 @@ def compare_algos(x_train, x_test, y_train, y_test, reg_or_class = '', metric = 
         accuracies.append(accuracy)
         end_time = time.time()
         time_taken = end_time - start_time
+        times_taken.append(time_taken)
         total_time += time_taken
-
-        print("Completed executing " + algos_to_be_compared[index].__name__ +" algorithm")
-        print("\tAccuracy : " + str(accuracy))
-        print("\tTime Taken : " + str(time_taken) + " seconds")
-
         index += 1
 
     if pp_accuracies:
@@ -97,8 +101,8 @@ def compare_algos(x_train, x_test, y_train, y_test, reg_or_class = '', metric = 
 
     best_accuracy_index = accuracies.index(max(accuracies))
 
-    print("\nTotal Time Taken : " + str(total_time) + " seconds")
-    print('\n\nBest Algorithm : ' + str(algos_to_be_compared[best_accuracy_index].__name__) + ' \t ' + str(accuracies[best_accuracy_index]))
+    charts_data = get_chart_data(algos_to_be_compared, accuracies, times_taken, algo_type)
+    return charts_data
 
 
 def do_error_checking(x_train, x_test, y_train, y_test, pp_accuracies, reg_or_class, metric):
@@ -124,7 +128,7 @@ def do_error_checking(x_train, x_test, y_train, y_test, pp_accuracies, reg_or_cl
     if metric != None and not (callable(metric)):
         raise MetricNotDefined("Metric should be a callable from sklearn.metrics")
 
-    if not (metric in CLASSIFICATION_METRICS or
+    if metric and not (metric in CLASSIFICATION_METRICS or
                 metric in REGRESSION_METRICS
     ):
         raise MetricNotDefined(metric.__name__ + " metric is not included")
@@ -141,14 +145,10 @@ def get_distribution(y_train):
 def get_accuracy(y_test, y_pred, metric, algo_type):
     accuracy = 0
 
-    if metric == None:
-        print("\naccuracy_score is selected as the metric\n")
-        metric = accuracy_score
-
     if algo_type == REGRESSION:
-        pass
+        accuracy = mean_absolute_error(y_test, y_pred)
     elif algo_type == CLASSIFICATION:
-        accuracy = metric(y_test, y_pred)
+        accuracy = accuracy_score(y_test, y_pred)
     else:
         raise RegOrClassNotDefined("reg_or_class should be either 'Reg' or 'Cla' or empty.")
     return accuracy
@@ -169,11 +169,9 @@ def get_algos_to_be_compared(y_train, reg_or_class):
         distribution = get_distribution(y_train)
 
         if distribution < 10:
-            print("Classification Algorithms are being run")
             algos_to_be_compared = CLASSIFICATION_ALGOS
             algo_type = CLASSIFICATION
         else:
-            print("Regression Algorithms are being run")
             algos_to_be_compared = REGRESSION_ALGOS
             algo_type = REGRESSION
 
