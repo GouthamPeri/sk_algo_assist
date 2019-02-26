@@ -13,6 +13,8 @@ REGRESSION_METRICS = [mean_absolute_error, mean_squared_error, explained_varianc
 CLASSIFICATION_METRICS = [f1_score, precision_score, recall_score, accuracy_score]
 REGRESSION = "Reg"
 CLASSIFICATION = "Cla"
+DEFAULT_REGRESSION_METRIC = mean_absolute_error
+DEFAULT_CLASSIFICATION_METRIC = accuracy_score
 
 
 class RegOrClassNotDefined(Exception):
@@ -143,12 +145,19 @@ def get_accuracy(y_test, y_pred, metric, algo_type):
             raise MetricNotDefined("The given metric is not a classification metric")
     # Error Checking Done
 
+    # Placing the default Metric
+    if not metric:
+        if algo_type == REGRESSION:
+            metric = DEFAULT_REGRESSION_METRIC
+        elif algo_type == CLASSIFICATION:
+            metric = DEFAULT_CLASSIFICATION_METRIC
+    
     accuracy = 0
 
     if algo_type == REGRESSION:
-        accuracy = mean_absolute_error(y_test, y_pred)
+        accuracy = metric(y_test, y_pred)
     elif algo_type == CLASSIFICATION:
-        accuracy = accuracy_score(y_test, y_pred)
+        accuracy = metric(y_test, y_pred)
     else:
         raise RegOrClassNotDefined("reg_or_class should be either 'Reg' or 'Cla' or empty.")
     return accuracy
