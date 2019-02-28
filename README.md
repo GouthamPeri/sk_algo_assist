@@ -1,5 +1,17 @@
 # sk_algo_assist
-An assistant for algorithm selection for Data Scientists using SKLearn.
+### An assistant for algorithm selection for Data Scientists using SKLearn.
+
+It is often a tedious task to compare all the algorithms for a given dataset because we never know which algorithm will give us the best accuracy or minimum error.
+
+The data scientist should run all the algorithms, compare them with the help of metrics and finally choose a algorithms that suits the dataset. This package does all this automatically and gives you the comparision between algorithm in the terms of a specific metric and also time which is another big factor for choosing a algorithm.
+
+The package goes hand in hand with the pandas package and sklearn package algorithms and metrics classes.
+
+Just give us the data in a pandas dataframe object along with the prediction column and sit back. 
+
+#### We will get you the results !!!!!!!
+
+Here is how:
 
 A function compare the algorithms that are suitable for the dataset and get the best algorithm
     in terms of accuracy, time of execution etc.
