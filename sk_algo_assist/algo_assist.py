@@ -97,9 +97,7 @@ def compare_algos_helper(x_train, x_test, y_train, y_test, reg_or_class, metric)
         total_time += time_taken
         index += 1
 
-    pp_accuracies_helper(accuracies, algos_to_be_compared)
-    best_accuracy_index = accuracies.index(max(accuracies))
-
+    pp_accuracies(accuracies, algos_to_be_compared, algo_type)
 
 
 def do_error_checking(x_train, x_test, y_train, y_test, reg_or_class, metric):
@@ -187,12 +185,19 @@ def get_algos_to_be_compared(y_train, reg_or_class):
     return algos_to_be_compared, algo_type
 
 
-def pp_accuracies_helper(accuracies, algos_to_be_compared):
+def pp_accuracies(accuracies, algos_to_be_compared, algo_type):
     d = {}
+    header = 'Algorithm Name \t '
+
     for i in range(len(accuracies)):
         d[algos_to_be_compared[i].__name__] = accuracies[i]
 
-    d = dict(sorted(d.items(), key = lambda x : x[1]))
+    if algo_type == REGRESSION:
+        header += 'Error\n'
+        d = dict(sorted(d.items(), key = lambda x : x[1]))
+    else:
+        header += 'Accuracy\n'
+        d = dict(sorted(d.items(), key = lambda x : x[1], reverse = True))
 
     for i in d:
         print("" + i + "\t" + "{0:.4f}".format(round(d[i],4)))
