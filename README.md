@@ -4,6 +4,8 @@ An assistant for algorithm selection for Data Scientists using SKLearn.
 A function compare the algorithms that are suitable for the dataset and get the best algorithm
     in terms of accuracy, time of execution etc.
 
+compare_algos(df, y, split = 0.7, reg_or_class = '', metric = None)
+
 Parameters
 ----------
 df: Pandas Dataframe, Required
