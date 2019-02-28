@@ -1,8 +1,0 @@
-.idea
-build
-dist
-sk_algo_assist.*
-ml_map
-.gitignore
-ml_map
-setup
