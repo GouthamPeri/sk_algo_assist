@@ -17,6 +17,10 @@ Install the package using the following command:
 
 `pip install sk_algo_assist`
 
+and import the compare_algos function from the package as follows:
+
+`from sk_algo_assist import compare_algos`
+
 ### **compare_algos(df, y, split = 0.7, reg_or_class = '', metric = None)**
 
 Parameters
