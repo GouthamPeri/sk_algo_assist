@@ -13,8 +13,9 @@ Just give us the data in a pandas dataframe object along with the prediction col
 
 Here is how:
 
-A function compare the algorithms that are suitable for the dataset and get the best algorithm
-    in terms of accuracy, time of execution etc.
+Install the package using the following command:
+
+`pip install sk_algo_assist`
 
 ### **compare_algos(df, y, split = 0.7, reg_or_class = '', metric = None)**
 
