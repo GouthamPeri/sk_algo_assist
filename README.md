@@ -53,7 +53,7 @@ compare_algos(iris_df,'target', split = 0.6)
 
 This will produce the output shown above.
 
-### **compare_algos(df, y, split = 0.7, reg_or_class = '', metric = None)**
+### **compare_algos(df, y, split = 0.7, reg_or_class = '', metric = None, algos_to_be_compared = [])**
 
 Parameters
 ----------
@@ -75,6 +75,14 @@ Parameters
 * reg_or_class: String, Optional(default = '')
     - If '' then the algorithm checks for the distribution in the y_train using the formula: distribution = len(y_train.unique())/len(y_train) * 100. If the distribution is less than 10           classification algorithms are run, else regression algorithms are run.
     - If String the allowed values are "Reg" or "Cla".
+
+* algos_to_be_compared: List of sklearn model objects, Optional
+    - If nothing is given, all the Regression or Classification algorithms will be run.
+    - If specified the given set of algorithms will be run.
+    - Defined Regression algorithms are:
+           LinearRegression, RandomForestRegressor, ExtraTreesRegressor, DecisionTreeRegressor, SGDRegressor, SVR, GradientBoostingRegressor, KNeighborsRegressor, AdaBoostRegressor
+    - Defined Classification algorithms are:
+           RandomForestClassifier, ExtraTreesClassifier, LogisticRegression, DecisionTreeClassifier, SGDClassifier, SVC, GradientBoostingClassifier, KNeighborsClassifier, GaussianNB, AdaBoostClassifier
 
 * return:String
     - The name of the algorithm that obatined the highest accuracy, along with the accuracy and time taken for fitting.
