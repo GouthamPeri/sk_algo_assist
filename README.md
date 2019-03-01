@@ -27,6 +27,31 @@ Here is how:
 
 4. Results
 
+`           Algorithm Name  Accuracy
+1  RandomForestClassifier    0.9833
+2    ExtraTreesClassifier    0.9833
+3      LogisticRegression    0.9667
+`
+
+## Example
+
+`
+from sklearn import datasets
+import pandas as pd
+from sklearn.metrics import accuracy_score, f1_score, mean_absolute_error, mean_squared_error
+from sk_algo_assist import compare_algos
+
+iris = datasets.load_iris()
+
+iris_df = pd.DataFrame(iris.data, columns=iris.feature_names)
+iris_df['target'] = pd.Series(iris.target)
+
+compare_algos(iris_df,'target', split = 0.6)
+
+`
+
+This will produce the output shown above.
+
 ### **compare_algos(df, y, split = 0.7, reg_or_class = '', metric = None)**
 
 Parameters
