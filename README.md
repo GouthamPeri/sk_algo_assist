@@ -26,12 +26,13 @@ Here is how:
 `compare_algos(iris_df, 'Species')`
 
 4. Results
+```
 
-`           Algorithm Name  Accuracy
+         Algorithm Name  Accuracy
 1  RandomForestClassifier    0.9833
 2    ExtraTreesClassifier    0.9833
 3      LogisticRegression    0.9667
-`
+```
 
 ## Example
 
