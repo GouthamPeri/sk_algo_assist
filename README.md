@@ -35,7 +35,7 @@ Here is how:
 
 ## Example
 
-`
+```python
 from sklearn import datasets
 import pandas as pd
 from sklearn.metrics import accuracy_score, f1_score, mean_absolute_error, mean_squared_error
@@ -48,7 +48,7 @@ iris_df['target'] = pd.Series(iris.target)
 
 compare_algos(iris_df,'target', split = 0.6)
 
-`
+```
 
 This will produce the output shown above.
 
