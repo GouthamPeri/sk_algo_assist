@@ -88,5 +88,3 @@ Parameters
     - Defined Classification algorithms are:
            RandomForestClassifier, ExtraTreesClassifier, LogisticRegression, DecisionTreeClassifier, SGDClassifier, SVC, GradientBoostingClassifier, KNeighborsClassifier, GaussianNB, AdaBoostClassifier
 
-* return:String
-    - The name of the algorithm that obatined the highest accuracy, along with the accuracy and time taken for fitting.
