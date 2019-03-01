@@ -27,10 +27,13 @@ Here is how:
 
 4. Results
 ```
-           Algorithm Name  Accuracy
-1  RandomForestClassifier    0.9833
-2    ExtraTreesClassifier    0.9833
-3      LogisticRegression    0.9667
+RandomForestClassifier  has completed training
+AdaBoostClassifier  has completed training
+ExtraTreesClassifier  has completed training
+           Algorithm Name  accuracy_score  Time Taken
+1      AdaBoostClassifier          0.9867      0.0120
+2  RandomForestClassifier          0.9733      0.0491
+3    ExtraTreesClassifier          0.9733      0.0080
 
 ```
 
@@ -40,6 +43,7 @@ Here is how:
 from sklearn import datasets
 import pandas as pd
 from sklearn.metrics import accuracy_score, f1_score, mean_absolute_error, mean_squared_error
+from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier, AdaBoostClassifier
 from sk_algo_assist import compare_algos
 
 iris = datasets.load_iris()
@@ -47,7 +51,7 @@ iris = datasets.load_iris()
 iris_df = pd.DataFrame(iris.data, columns=iris.feature_names)
 iris_df['target'] = pd.Series(iris.target)
 
-compare_algos(iris_df,'target', split = 0.6)
+compare_algos(iris_df,'target', split = 0.5, algos_to_be_compared[RandomForestClassifier, ExtraTreesClassifier, AdaBoostClassifier])
 
 ```
 
