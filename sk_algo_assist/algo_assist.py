@@ -83,7 +83,6 @@ def compare_algos_helper(x_train, x_test, y_train, y_test, reg_or_class, metric)
 
     for algo in algos_to_be_compared:
         start_time = time.time()
-        print(algo, type(algo))
         model = algo()
         model.fit(x_train, y_train)
         y_pred = model.predict(x_test)
@@ -187,17 +186,25 @@ def get_algos_to_be_compared(y_train, reg_or_class):
 
 def pp_accuracies(accuracies, algos_to_be_compared, algo_type):
     d = {}
-    header = 'Algorithm Name \t '
+    header = ['Algorithm Name']
 
     for i in range(len(accuracies)):
         d[algos_to_be_compared[i].__name__] = accuracies[i]
 
     if algo_type == REGRESSION:
-        header += 'Error\n'
+        header.append('Error')
         d = dict(sorted(d.items(), key = lambda x : x[1]))
     else:
-        header += 'Accuracy\n'
-        d = dict(sorted(d.items(), key = lambda x : x[1], reverse = True))
+        header.append('Accuracy')
+        d = dict(sorted(d.items(), key = lambda x : x [1], reverse = True))
+
+    data = []
+    index = []
+    j = 1
 
     for i in d:
-        print("" + i + "\t" + "{0:.4f}".format(round(d[i],4)))
+        data.append([i, round(d[i], 4)])
+        index.append(j)
+        j += 1
+    pp_df = pd.DataFrame(data, index, header)
+    print(pp_df)
