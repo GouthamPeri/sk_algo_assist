@@ -1,5 +1,6 @@
 import time
 import pandas as pd
+from .cleaning import clean_df
 
 from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier, RandomForestRegressor, ExtraTreesRegressor
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
@@ -46,6 +47,8 @@ class MetricNotDefined(Exception):
 class AlgoToBeComparedNotDefined(Exception):
     pass
 
+class NotString(Exception):
+    pass
 
 def compare_algos(df, y, split = 0.7, reg_or_class = '', metric = None, algos_to_be_compared = []):
     '''
@@ -83,6 +86,12 @@ def compare_algos(df, y, split = 0.7, reg_or_class = '', metric = None, algos_to
 
     '''
 
+    do_error_checking(df, y, reg_or_class, metric, algos_to_be_compared)
+
+    if bool(df.isnull().values.any()) or bool((df.applymap(type) == str).values.any()):
+        return_df = clean_df(df, y)
+        print("------------------------------------")
+
     df_y = df[y]
     x = df.drop([y], axis=1)
     x_train, x_test, y_train, y_test = train_test_split(x, df_y, test_size=1 - split, random_state=42)
@@ -90,8 +99,6 @@ def compare_algos(df, y, split = 0.7, reg_or_class = '', metric = None, algos_to
 
 
 def compare_algos_helper(x_train, x_test, y_train, y_test, reg_or_class, metric, algos_to_be_compared):
-
-    do_error_checking(x_train, x_test, y_train, y_test, reg_or_class, metric, algos_to_be_compared)
 
     algos_to_be_compared, algo_type = get_algos_to_be_compared(y_train, reg_or_class, algos_to_be_compared)
     metric = get_metric(algo_type, metric)
@@ -120,16 +127,12 @@ def compare_algos_helper(x_train, x_test, y_train, y_test, reg_or_class, metric,
     pp_accuracies(algos_to_be_compared, algo_type, metric, accuracies, times_taken)
 
 
-def do_error_checking(x_train, x_test, y_train, y_test, reg_or_class, metric, algos_to_be_compared):
-    if not (isinstance(x_train, pd.DataFrame) and
-            isinstance(x_test, pd.DataFrame)
-    ):
-        raise NotPandasDataFrame("The x_train, x_test should be a Pandas Dataframe.")
+def do_error_checking(df, y, reg_or_class, metric, algos_to_be_compared):
+    if not (isinstance(df, pd.DataFrame)):
+        raise NotPandasDataFrame("The given dataframe is not a pandas dataframe")
 
-    if not( isinstance(y_train, pd.Series) and
-            isinstance(y_test, pd.Series)
-    ):
-        raise NotPandasSeries("The y_train, y_test should be a Pandas Series objects.")
+    if not (isinstance(y, str)):
+        raise NotString("Y attribute should be a string")
 
     if (reg_or_class != REGRESSION and
             reg_or_class != CLASSIFICATION and
