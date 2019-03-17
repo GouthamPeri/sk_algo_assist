@@ -28,7 +28,11 @@ CLASSIFICATION = "Cla"
 DEFAULT_REGRESSION_METRIC = mean_absolute_error
 DEFAULT_CLASSIFICATION_METRIC = accuracy_score
 
+DASH_LENGTH = 30
 
+
+class SplitNotInRange(Exception):
+    pass
 
 class RegOrClassNotDefined(Exception):
     pass
@@ -41,14 +45,22 @@ class NotPandasDataFrame(Exception):
 class NotPandasSeries(Exception):
     pass
 
+
 class MetricNotDefined(Exception):
     pass
+
 
 class AlgoToBeComparedNotDefined(Exception):
     pass
 
+
 class NotString(Exception):
     pass
+
+
+class ColumnNotDefined(Exception):
+    pass
+
 
 def compare_algos(df, y, split = 0.7, reg_or_class = '', metric = None, algos_to_be_compared = []):
     '''
@@ -86,12 +98,15 @@ def compare_algos(df, y, split = 0.7, reg_or_class = '', metric = None, algos_to
 
     '''
 
-    do_error_checking(df, y, reg_or_class, metric, algos_to_be_compared)
+    do_error_checking(df, y, split, reg_or_class, metric, algos_to_be_compared)
 
     if bool(df.isnull().values.any()) or bool((df.applymap(type) == str).values.any()):
-        return_df = clean_df(df, y)
-        print("------------------------------------")
+        print_dash()
+        df = clean_df(df, y)
+        print_dash()
 
+    print(df.info())
+    
     df_y = df[y]
     x = df.drop([y], axis=1)
     x_train, x_test, y_train, y_test = train_test_split(x, df_y, test_size=1 - split, random_state=42)
@@ -127,7 +142,13 @@ def compare_algos_helper(x_train, x_test, y_train, y_test, reg_or_class, metric,
     pp_accuracies(algos_to_be_compared, algo_type, metric, accuracies, times_taken)
 
 
-def do_error_checking(df, y, reg_or_class, metric, algos_to_be_compared):
+def do_error_checking(df, y, split, reg_or_class, metric, algos_to_be_compared):
+    if y not in df.columns:
+        raise ColumnNotDefined("The column " + y + "is not defined the given dataframe")
+
+    if split < 0  or split > 1:
+        raise SplitNotInRange("Split range should be between 0 and 1")
+
     if not (isinstance(df, pd.DataFrame)):
         raise NotPandasDataFrame("The given dataframe is not a pandas dataframe")
 
@@ -252,4 +273,9 @@ def pp_accuracies(algos_to_be_compared, algo_type, metric, accuracies, times_tak
         j += 1
 
     pp_df = pd.DataFrame(data, index, header)
+    print_dash()
     print(pp_df)
+
+
+def print_dash():
+    print('-' * DASH_LENGTH)
